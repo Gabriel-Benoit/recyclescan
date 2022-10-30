@@ -299,8 +299,8 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "08c3df135fd5dbb6de21482d6247ec9ce7f81ee4"
-      url: "https://github.com/zhengbomo/flutter_tflite.git"
+      resolved-ref: a2c28cbf07a79fa0c3b0435c811b4e011fb07464
+      url: "https://github.com/BergLucas/flutter_tflite.git"
     source: git
     version: "1.1.2"
   typed_data:

@@ -39,7 +39,7 @@ dependencies:
   camera: ^0.10.0+4
   tflite:
     git:
-      url: https://github.com/zhengbomo/flutter_tflite.git
+      url: https://github.com/BergLucas/flutter_tflite.git
       ref: master
   image: ^3.2.2
   permission_handler: ^10.2.0
