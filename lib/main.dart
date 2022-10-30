@@ -1,11 +1,7 @@
-import 'dart:collection';
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:tflite/tflite.dart';
-import 'package:image/image.dart' as imglib;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:recyclescan/box.dart';
 //import 'package:json_annotation/json_annotation.dart';
@@ -49,8 +45,8 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     _controller = CameraController(widget.camera, ResolutionPreset.low,
         enableAudio: false);
     res = Tflite.loadModel(
-        model: "assets/ssd_mobilenet.tflite",
-        labels: "assets/ssd_mobilenet.txt",
+        model: "assets/yolov2_tiny.tflite",
+        labels: "assets/yolov2_tiny.txt",
         numThreads: 1,
         isAsset: true,
         useGpuDelegate: false);
@@ -122,13 +118,22 @@ class _BoxContainerState extends State<BoxContainer> {
         bytesList: image.planes.map((plane) {
           return plane.bytes;
         }).toList(),
-        numResultsPerClass: 1,
+        model: "YOLO",
         imageHeight: image.height,
         imageWidth: image.width,
+        imageMean: 0,
+        imageStd: 255.0,
+        threshold: 0.1,
+        numResultsPerClass: 2,
+        anchors: Tflite.anchors,
+        blockSize: 32,
+        numBoxesPerBlock: 5,
+        asynch: true
       );
       if (recog != null) {
         setState(() {
           recognitions = recog;
+          print(recog);
           this.image = image;
           busy = false;
         });
