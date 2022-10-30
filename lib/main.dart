@@ -1,3 +1,5 @@
+import 'dart:collection';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:tflite/tflite.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:recyclescan/box.dart';
+//import 'package:json_annotation/json_annotation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +26,6 @@ Future<void> main() async {
     ),
     home: TakePictureScreen(camera: firstCamera),
   ));
-
-
 }
 
 class TakePictureScreen extends StatefulWidget {
@@ -45,18 +46,14 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(
-      widget.camera,
-      ResolutionPreset.low,
-      enableAudio: false
-    );
+    _controller = CameraController(widget.camera, ResolutionPreset.low,
+        enableAudio: false);
     res = Tflite.loadModel(
-      model: "assets/ssd_mobilenet.tflite",
-      labels: "assets/ssd_mobilenet.txt",
-      numThreads: 1,
-      isAsset: true,
-      useGpuDelegate: false
-    );
+        model: "assets/ssd_mobilenet.tflite",
+        labels: "assets/ssd_mobilenet.txt",
+        numThreads: 1,
+        isAsset: true,
+        useGpuDelegate: false);
     _initializeControllerFuture = _controller.initialize();
   }
 
@@ -80,19 +77,10 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             // If the Future is complete, display the preview.
-            _controller.startImageStream((CameraImage image) async {
-              if (busy) return;
-              busy = true;
-              var recognitions = await Tflite.detectObjectOnFrame(
-                bytesList: image.planes.map((plane) {return plane.bytes;}).toList(),
-                numResultsPerClass: 1,
-                imageHeight: image.height,
-                imageWidth: image.width,
-              );
-              print(recognitions);
-              busy = false;
-            });
-            return CameraPreview( _controller, child: BoxWithBorder(height: 150.0, width: 150.0, posX: 0.0, posY: 0.0,),);
+            return CameraPreview(
+              _controller,
+              child: BoxContainer(camera: _controller),
+            );
           } else {
             // Otherwise, display a loading indicator.
             return const Center(child: CircularProgressIndicator());
@@ -108,4 +96,84 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
       ),
     );
   }
+}
+
+class BoxContainer extends StatefulWidget {
+  final CameraController camera;
+
+  const BoxContainer({super.key, required this.camera});
+
+  @override
+  State<StatefulWidget> createState() => _BoxContainerState();
+}
+
+class _BoxContainerState extends State<BoxContainer> {
+  bool busy = false;
+  var recognitions = [];
+  CameraImage? image;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.camera.startImageStream((CameraImage image) async {
+      if (busy) return;
+      busy = true;
+      var recog = await Tflite.detectObjectOnFrame(
+        bytesList: image.planes.map((plane) {
+          return plane.bytes;
+        }).toList(),
+        numResultsPerClass: 1,
+        imageHeight: image.height,
+        imageWidth: image.width,
+      );
+      if (recog != null) {
+        setState(() {
+          recognitions = recog;
+          this.image = image;
+          busy = false;
+        });
+      }
+    });
+  }
+
+  _mapCallBack(e) {
+    var t = json.decode(json.encode(e));
+    var rect = t["rect"];
+    var h = rect["h"];
+    var w = rect["w"];
+    var x = rect["x"];
+    var y = rect["y"];
+    var px = image!.height * x;
+    var py = image!.height * y;
+    var height = image!.height * h;
+    var width = image!.width * w;
+    return BoxWithBorder(
+        height: height as double, width: width as double, posX: px as double, posY: py as double );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //var widgets = recognitions.map(_mapCallBack).toList();
+    var widgets = null;
+    if (!recognitions.isEmpty) {
+      widgets = recognitions.map((e) => _mapCallBack(e) as BoxWithBorder).toList();
+      //widgets = [_mapCallBack(recognitions[0])].map((e) => e as BoxWithBorder).toList();
+    }
+    return Stack(
+      children: widgets == null ? [] : widgets,
+    );
+  }
+}
+
+class DetectedObject {
+  late Rect rect;
+  late double confidenceInClass;
+  late String detectedClass;
+}
+
+class Rect {
+  late double w;
+  late double h;
+  late double y;
+  late double x;
 }
