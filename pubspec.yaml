@@ -41,8 +41,6 @@ dependencies:
     git:
       url: https://github.com/BergLucas/flutter_tflite.git
       ref: master
-  image: ^3.2.2
-  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:

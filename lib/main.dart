@@ -1,184 +1,230 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:tflite/tflite.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:recyclescan/box.dart';
-//import 'package:json_annotation/json_annotation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Permission.storage.request();
-
   final cameras = await availableCameras();
 
-  final firstCamera = cameras.first;
+  final camera = cameras.first;
 
   runApp(MaterialApp(
-    title: 'Flutter Demo',
+    title: 'RecycleScan',
     theme: ThemeData(
-      primarySwatch: Colors.blue,
+      primarySwatch: Colors.green,
     ),
-    home: TakePictureScreen(camera: firstCamera),
+    home: HomePage(camera: camera),
   ));
 }
 
-class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({super.key, required this.camera});
+class HomePage extends StatefulWidget {
 
   final CameraDescription camera;
 
+  const HomePage({super.key, required this.camera});
+
   @override
-  State<TakePictureScreen> createState() => _TakePictureScreenState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _TakePictureScreenState extends State<TakePictureScreen> {
-  late CameraController _controller;
-  late Future<void> _initializeControllerFuture;
-  late Future<String?> res;
-  bool busy = false;
+class _HomePageState extends State<HomePage> {
+
+  late final CameraController _controller;
+  late final Future<void> _initialized;
+  late final bool busy = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(widget.camera, ResolutionPreset.low,
-        enableAudio: false);
-    res = Tflite.loadModel(
-        model: "assets/yolov2_tiny.tflite",
-        labels: "assets/yolov2_tiny.txt",
-        numThreads: 1,
-        isAsset: true,
-        useGpuDelegate: false);
-    _initializeControllerFuture = _controller.initialize();
+    _controller = CameraController(widget.camera, ResolutionPreset.low, enableAudio: false);
+    Future<String?> model = Tflite.loadModel(
+      model: "assets/yolov2_tiny.tflite",
+      labels: "assets/yolov2_tiny.txt",
+      numThreads: 4,
+      isAsset: true,
+      useGpuDelegate: false
+    );
+    _initialized = Future.wait([_controller.initialize(), model]);
   }
 
   @override
   void dispose() async {
-    // Dispose of the controller when the widget is disposed.
-    await _controller.dispose();
-    await Tflite.close();
     super.dispose();
+    await Future.wait([_controller.dispose(), Tflite.close()]);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Take a picture')),
-      // You must wait until the controller is initialized before displaying the
-      // camera preview. Use a FutureBuilder to display a loading spinner until the
-      // controller has finished initializing.
+      appBar: AppBar(title: const Text('RecycleScan')),
       body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
+        future: _initialized,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return CameraPreview(
-              _controller,
-              child: BoxContainer(camera: _controller),
-            );
+            return ObjectDetector(controller: _controller);
           } else {
-            // Otherwise, display a loading indicator.
             return const Center(child: CircularProgressIndicator());
           }
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        // Provide an onPressed callback.
-        onPressed: () async {
-          print("click");
-        },
-        child: const Icon(Icons.camera_alt),
-      ),
+      )
     );
   }
 }
 
-class BoxContainer extends StatefulWidget {
-  final CameraController camera;
+class ObjectDetector extends StatefulWidget {
 
-  const BoxContainer({super.key, required this.camera});
+  final CameraController controller;
+
+  const ObjectDetector({super.key, required this.controller});
 
   @override
-  State<StatefulWidget> createState() => _BoxContainerState();
+  State<StatefulWidget> createState() => _ObjectDetectorState();
 }
 
-class _BoxContainerState extends State<BoxContainer> {
+class _ObjectDetectorState extends State<ObjectDetector> {
+
+  late List<dynamic> recognitions = [];
+  late CameraImage image;
   bool busy = false;
-  var recognitions = [];
-  CameraImage? image;
+  String? boxClass;
+  bool isDetectionStarted = false;
+  late Widget preview;
 
   @override
   void initState() {
     super.initState();
-    widget.camera.startImageStream((CameraImage image) async {
+    _beginDetection();
+    preview = AspectRatio(
+      aspectRatio: widget.controller.value.aspectRatio,
+      child: CameraPreview(widget.controller),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pauseDetection();
+  }
+
+  Future<void> _beginDetection() async {
+    if (isDetectionStarted) return;
+    isDetectionStarted = true;
+
+    await widget.controller.startImageStream((image) async {
       if (busy) return;
       busy = true;
-      var recog = await Tflite.detectObjectOnFrame(
-        bytesList: image.planes.map((plane) {
-          return plane.bytes;
-        }).toList(),
+      List<dynamic>? recognitions = await Tflite.detectObjectOnFrame(
+        bytesList: image.planes.map((plane) => plane.bytes).toList(),
         model: "YOLO",
         imageHeight: image.height,
         imageWidth: image.width,
         imageMean: 0,
         imageStd: 255.0,
-        threshold: 0.1,
+        threshold: 0.5,
         numResultsPerClass: 2,
         anchors: Tflite.anchors,
         blockSize: 32,
         numBoxesPerBlock: 5,
         asynch: true
       );
-      if (recog != null) {
-        setState(() {
-          recognitions = recog;
-          print(recog);
-          this.image = image;
-          busy = false;
-        });
-      }
+      busy = false;
+      setState(() {
+        this.recognitions = recognitions ?? [];
+        this.image = image;
+      });
     });
   }
 
-  _mapCallBack(e) {
-    var t = json.decode(json.encode(e));
-    var rect = t["rect"];
-    var h = rect["h"];
-    var w = rect["w"];
-    var x = rect["x"];
-    var y = rect["y"];
-    var px = image!.width * x;
-    var py = image!.height * y;
-    var height = image!.height * h;
-    var width = image!.width * w;
-    return BoxWithBorder(
-        height: height as double, width: width as double, posX: px as double, posY: py as double );
+  Future<void> _pauseDetection() async {
+    if (!isDetectionStarted) return;
+    isDetectionStarted = false;
+
+    await widget.controller.stopImageStream();
+  }
+
+  void _setBoxType(String? boxType) {
+    setState(() {
+      this.boxClass = boxType;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    //var widgets = recognitions.map(_mapCallBack).toList();
-    var widgets = null;
-    if (!recognitions.isEmpty) {
-      widgets = recognitions.map((e) => _mapCallBack(e) as BoxWithBorder).toList();
-      //widgets = [_mapCallBack(recognitions[0])].map((e) => e as BoxWithBorder).toList();
+    Size size = MediaQuery.of(context).size;
+    List<Widget> widgets = [];
+
+    widgets.add(
+      Positioned(
+        top: 0.0,
+        left: 0.0,
+        width: size.width,
+        height: size.height,
+        child: SizedBox(
+          height: size.height,
+          child: preview
+        ),
+      ),
+    );
+
+    widgets.addAll(
+      recognitions.map((result) =>
+        Box(
+          posX: result["rect"]["x"] * size.width,
+          posY: result["rect"]["y"] * size.height,
+          width: result["rect"]["w"] * size.width,
+          height: result["rect"]["h"] * size.height,
+          detectedClass: result["detectedClass"],
+          color: Colors.green,
+          onPressed: (detectedClass) {
+            _setBoxType(detectedClass);
+            _pauseDetection();
+          },
+        )
+      )
+    );
+
+    if (boxClass != null) {
+      widgets.add(
+        WasteDescription(
+          detectedClass: boxClass!,
+          closeCallBack: () {
+            _setBoxType(null);
+            _beginDetection();
+          }
+        )
+      );
     }
+
     return Stack(
-      children: widgets == null ? [] : widgets,
+      children: widgets,
     );
   }
 }
 
-class DetectedObject {
-  late Rect rect;
-  late double confidenceInClass;
-  late String detectedClass;
-}
+class WasteDescription extends StatelessWidget {
 
-class Rect {
-  late double w;
-  late double h;
-  late double y;
-  late double x;
+  final String detectedClass;
+  final void Function() closeCallBack;
+
+  const WasteDescription({super.key, required this.detectedClass, required this.closeCallBack});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(color: Colors.white),
+      child: Stack(
+        children: [
+          Text(detectedClass),
+          Positioned(
+            child: CloseButton(
+              onPressed: closeCallBack,
+              color: Colors.deepOrange,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
