@@ -15,7 +15,7 @@ Future<void> main() async {
     theme: ThemeData(
       primarySwatch: Colors.blue,
     ),
-    home: TakePictureScreen(camera: firstCamera),
+    home: const DisplayGarbageIdentified(trashIconPath: 'assets/trash/pmc.jpg', trashName: 'PMC', garbageName: 'Canette',),
   ));
 }
 
@@ -120,6 +120,50 @@ class DisplayPictureScreen extends StatelessWidget {
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
       body: Image.file(File(imagePath)),
+      backgroundColor: Colors.black,
     );
   }
 }
+
+// Display
+class DisplayGarbageIdentified extends StatelessWidget {
+  final String trashIconPath;
+  final String trashName;
+  final String garbageName;
+
+  const DisplayGarbageIdentified({super.key, required this.trashIconPath, required this.trashName, required this.garbageName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: Align(
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(
+            height: 300,
+            child: Column(
+              children: [
+                Text(garbageName,
+                  style: const TextStyle(
+                    fontSize: 40.0,
+                    fontWeight: FontWeight.bold,
+
+                  ),
+                ),
+                const SizedBox(height: 25),
+                Image(image: AssetImage(trashIconPath),),
+                const SizedBox(height: 5),
+                Text(trashName,
+                  style: const TextStyle(
+                    fontSize: 30.0,
+                  ),
+                ),
+                const SizedBox(height: 15),
+            ], // children
+          ),
+        ),
+      ),
+    );
+  }
+}
+
