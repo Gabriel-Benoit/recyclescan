@@ -148,7 +148,7 @@ class _BoxContainerState extends State<BoxContainer> {
     var w = rect["w"];
     var x = rect["x"];
     var y = rect["y"];
-    var px = image!.height * x;
+    var px = image!.width * x;
     var py = image!.height * y;
     var height = image!.height * h;
     var width = image!.width * w;
