@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:recyclescan/garbage.dart';
 
 /// Widget Wrapper représentant une box qui identifie un déchet et
 /// qui permet d'afficher une description qui donne une directive de tri
