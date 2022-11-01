@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recyclescan/garbage.dart';
 
 /// Widget Wrapper représentant une box qui identifie un déchet et
 /// qui permet d'afficher une description qui donne une directive de tri
@@ -8,9 +9,8 @@ class Box extends StatelessWidget {
   final double width;
   final double posX;
   final double posY;
-  final String detectedClass;
   final Color color;
-  final void Function(String detectedClass) onPressed;
+  final void Function() onPressed;
 
   const Box({
     super.key,
@@ -18,7 +18,6 @@ class Box extends StatelessWidget {
     required this.width,
     required this.posX,
     required this.posY,
-    required this.detectedClass,
     required this.color,
     required this.onPressed
   });
@@ -34,7 +33,7 @@ class Box extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(color: color, width: 2.0),
         ),
-        child: GestureDetector(onTap: () => onPressed(detectedClass)),
+        child: GestureDetector(onTap: onPressed),
       )
     );
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:recyclescan/garbage.dart';
+import 'package:recyclescan/rule.dart';
 import 'package:tflite/tflite.dart';
 import 'package:recyclescan/box.dart';
 
@@ -88,7 +90,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
   late List<dynamic> recognitions = [];
   late CameraImage image;
   bool busy = false;
-  String? boxClass;
+  Garbage? garbage;
   bool isDetectionStarted = false;
   late Widget preview;
 
@@ -144,9 +146,9 @@ class _ObjectDetectorState extends State<ObjectDetector> {
     await widget.controller.stopImageStream();
   }
 
-  void _setBoxType(String? boxType) {
+  void _setGarbage(Garbage? garbage) {
     setState(() {
-      this.boxClass = boxType;
+      this.garbage = garbage;
     });
   }
 
@@ -175,22 +177,22 @@ class _ObjectDetectorState extends State<ObjectDetector> {
           posY: result["rect"]["y"] * size.height,
           width: result["rect"]["w"] * size.width,
           height: result["rect"]["h"] * size.height,
-          detectedClass: result["detectedClass"],
           color: Colors.green,
-          onPressed: (detectedClass) {
-            _setBoxType(detectedClass);
+          onPressed: () {
+            _setGarbage(Garbage(name: result["detectedClass"], imageUrl: ""));
             _pauseDetection();
           },
         )
       )
     );
 
-    if (boxClass != null) {
+    if (garbage != null) {
       widgets.add(
         WasteDescription(
-          detectedClass: boxClass!,
+          garbage: garbage!,
+          rule: const Rule(color: Colors.blue, imageUrl: "", name: "test"),
           closeCallBack: () {
-            _setBoxType(null);
+            _setGarbage(null);
             _beginDetection();
           }
         )
@@ -205,10 +207,11 @@ class _ObjectDetectorState extends State<ObjectDetector> {
 
 class WasteDescription extends StatelessWidget {
 
-  final String detectedClass;
+  final Garbage garbage;
+  final Rule rule;
   final void Function() closeCallBack;
 
-  const WasteDescription({super.key, required this.detectedClass, required this.closeCallBack});
+  const WasteDescription({super.key, required this.garbage, required this.rule, required this.closeCallBack});
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +219,7 @@ class WasteDescription extends StatelessWidget {
       decoration: const BoxDecoration(color: Colors.white),
       child: Stack(
         children: [
-          Text(detectedClass),
+          Text("${garbage.name} ${rule.name}"),
           Positioned(
             child: CloseButton(
               onPressed: closeCallBack,
