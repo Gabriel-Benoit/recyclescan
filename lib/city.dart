@@ -4,7 +4,7 @@ import 'package:recyclescan/rule.dart';
 class City {
   final int postalCode;
   final String name;
-  final Map<Garbage, Rule> rules;
+  final Future<Map<Garbage, Rule>> rules;
 
   const City({required this.postalCode, required this.name, required this.rules});
 }
