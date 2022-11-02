@@ -170,7 +170,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
           height: result["rect"]["h"] * size.height,
           color: Colors.green,
           onPressed: () {
-            _setGarbage(Garbage(name: result["detectedClass"], imageUrl: ""));
+            _setGarbage(Garbage(name: result["detectedClass"], image: const NetworkImage("https://upload.wikimedia.org/wikipedia/commons/6/6c/Tolkki20091027.jpg")));
             _pauseDetection();
           },
         )));
@@ -180,7 +180,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
           garbage: garbage!,
           rule: const Rule(
               color: Color.fromARGB(255, 101, 166, 219),
-              imageUrl: "",
+              image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/6/6c/Tolkki20091027.jpg"),
               name: "test"),
           closeCallBack: () {
             _setGarbage(null);
