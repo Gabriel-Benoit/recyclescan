@@ -14,9 +14,8 @@ Size? _getCamSize() {
       _camPreviewSize.currentContext?.findRenderObject();
   if (renderBox == null) {
     return null;
-  } else {
-    return (renderBox as RenderBox).size;
   }
+  return (renderBox as RenderBox).size;
 }
 
 Future<void> main() async {
