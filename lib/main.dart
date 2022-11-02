@@ -9,7 +9,7 @@ import 'wastedescription.dart';
 
 GlobalKey _camPreviewSize = GlobalKey(debugLabel: "cam_size");
 
-_getCamSize() {
+Size? _getCamSize() {
   final RenderObject? renderBox =
       _camPreviewSize.currentContext?.findRenderObject();
   if (renderBox == null) {
