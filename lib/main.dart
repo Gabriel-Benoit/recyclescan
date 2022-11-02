@@ -7,6 +7,18 @@ import 'package:recyclescan/box.dart';
 
 import 'wastedescription.dart';
 
+GlobalKey _camPreviewSize = GlobalKey(debugLabel: "cam_size");
+
+_getCamSize() {
+  final RenderObject? renderBox =
+      _camPreviewSize.currentContext?.findRenderObject();
+  if (renderBox == null) {
+    return null;
+  } else {
+    return (renderBox as RenderBox).size;
+  }
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -18,6 +30,7 @@ Future<void> main() async {
     title: 'RecycleScan',
     theme: ThemeData(
       primarySwatch: Colors.green,
+      bottomAppBarColor: Colors.green,
     ),
     home: HomePage(camera: camera),
   ));
@@ -40,7 +53,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(widget.camera, ResolutionPreset.medium,
+    _controller = CameraController(widget.camera, ResolutionPreset.low,
         enableAudio: false);
     Future<String?> model = Tflite.loadModel(
         model: "assets/yolov2_tiny.tflite",
@@ -65,7 +78,16 @@ class _HomePageState extends State<HomePage> {
           future: _initialized,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return ObjectDetector(controller: _controller);
+              return Container(
+                color: Colors.green,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ObjectDetector(controller: _controller),
+                    ),
+                  ],
+                ),
+              );
             } else {
               return const Center(child: CircularProgressIndicator());
             }
@@ -89,14 +111,24 @@ class _ObjectDetectorState extends State<ObjectDetector> {
   bool busy = false;
   Garbage? garbage;
   bool isDetectionStarted = false;
-  late CameraPreview preview;
+  late Container preview;
 
   @override
   void initState() {
     super.initState();
     _beginDetection();
 
-    preview = CameraPreview(widget.controller);
+    preview = Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            blurRadius: 5,
+          )
+        ],
+      ),
+      child: CameraPreview(key: _camPreviewSize, widget.controller),
+    );
   }
 
   @override
@@ -148,7 +180,9 @@ class _ObjectDetectorState extends State<ObjectDetector> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size? size = _getCamSize();
+    size ??= const Size(0.0, 0.0);
+    print(size);
     List<Widget> widgets = [];
 
     widgets.add(preview);
@@ -156,7 +190,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
     widgets.addAll(
       recognitions.map(
         (result) => Box(
-          posX: result["rect"]["x"] * size.width,
+          posX: result["rect"]["x"] * size!.width,
           posY: result["rect"]["y"] * size.height,
           width: result["rect"]["w"] * size.width,
           height: result["rect"]["h"] * size.height,
