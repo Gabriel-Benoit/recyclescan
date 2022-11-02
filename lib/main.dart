@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(widget.camera, ResolutionPreset.low,
+    _controller = CameraController(widget.camera, ResolutionPreset.medium,
         enableAudio: false);
     Future<String?> model = Tflite.loadModel(
         model: "assets/yolov2_tiny.tflite",
@@ -89,16 +89,14 @@ class _ObjectDetectorState extends State<ObjectDetector> {
   bool busy = false;
   Garbage? garbage;
   bool isDetectionStarted = false;
-  late Widget preview;
+  late CameraPreview preview;
 
   @override
   void initState() {
     super.initState();
     _beginDetection();
-    preview = AspectRatio(
-      aspectRatio: widget.controller.value.aspectRatio,
-      child: CameraPreview(widget.controller),
-    );
+
+    preview = CameraPreview(widget.controller);
   }
 
   @override
@@ -153,39 +151,45 @@ class _ObjectDetectorState extends State<ObjectDetector> {
     Size size = MediaQuery.of(context).size;
     List<Widget> widgets = [];
 
-    widgets.add(
-      Positioned(
-        top: 0.0,
-        left: 0.0,
-        width: size.width,
-        height: size.height,
-        child: SizedBox(height: size.height, child: preview),
-      ),
-    );
+    widgets.add(preview);
 
-    widgets.addAll(recognitions.map((result) => Box(
+    widgets.addAll(
+      recognitions.map(
+        (result) => Box(
           posX: result["rect"]["x"] * size.width,
           posY: result["rect"]["y"] * size.height,
           width: result["rect"]["w"] * size.width,
           height: result["rect"]["h"] * size.height,
           color: Colors.green,
           onPressed: () {
-            _setGarbage(Garbage(name: result["detectedClass"], image: const NetworkImage("https://upload.wikimedia.org/wikipedia/commons/6/6c/Tolkki20091027.jpg")));
+            _setGarbage(
+              Garbage(
+                name: result["detectedClass"],
+                image: const NetworkImage(
+                    "https://upload.wikimedia.org/wikipedia/commons/6/6c/Tolkki20091027.jpg"),
+              ),
+            );
             _pauseDetection();
           },
-        )));
+        ),
+      ),
+    );
 
     if (garbage != null) {
-      widgets.add(WasteDescription(
+      widgets.add(
+        WasteDescription(
           garbage: garbage!,
           rule: const Rule(
               color: Color.fromARGB(255, 101, 166, 219),
-              image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/6/6c/Tolkki20091027.jpg"),
+              image: NetworkImage(
+                  "https://upload.wikimedia.org/wikipedia/commons/6/6c/Tolkki20091027.jpg"),
               name: "test"),
           closeCallBack: () {
             _setGarbage(null);
             _beginDetection();
-          }));
+          },
+        ),
+      );
     }
 
     return Stack(

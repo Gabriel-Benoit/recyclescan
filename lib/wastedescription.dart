@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'garbage.dart';
 import 'rule.dart';
+
 class WasteDescription extends StatelessWidget {
   final Garbage garbage;
   final Rule rule;
@@ -34,9 +37,9 @@ class WasteDescription extends StatelessWidget {
           Center(
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Text("Déchet identifié: ${garbage.name}"),
-              Image(image: garbage.image),
+              Image(image: garbage.image, semanticLabel: "Garbage picture"),
               Text("Politique de tri: ${rule.name}"),
-              Image(image: rule.image),
+              Image(image: rule.image, semanticLabel: "Rule picture"),
             ]),
           )
         ],
