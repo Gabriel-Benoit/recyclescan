@@ -12,12 +12,14 @@ Future<void> main() async {
 
   final camera = cameras.first;
 
+  final rules = await Rule.fromJSON("assets/Namur.json");
+
   runApp(MaterialApp(
     title: 'RecycleScan',
     theme: ThemeData(
       primarySwatch: Colors.green,
     ),
-    home: HomePage(camera: camera),
+    home: WasteDescription(garbage: garbages[0], rule: rules[garbages[0]] as Rule),
   ));
 }
 
@@ -191,10 +193,10 @@ class _ObjectDetectorState extends State<ObjectDetector> {
         WasteDescription(
           garbage: garbage!,
           rule: const Rule(color: Colors.blue, imageUrl: "", name: "test"),
-          closeCallBack: () {
+         /* closeCallBack: () {
             _setGarbage(null);
             _beginDetection();
-          }
+          }*/
         )
       );
     }
@@ -209,23 +211,17 @@ class WasteDescription extends StatelessWidget {
 
   final Garbage garbage;
   final Rule rule;
-  final void Function() closeCallBack;
+  //final void Function() closeCallBack;
 
-  const WasteDescription({super.key, required this.garbage, required this.rule, required this.closeCallBack});
+  const WasteDescription({super.key, required this.garbage, required this.rule});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(color: Colors.white),
+      decoration: BoxDecoration(color: rule.color),
       child: Stack(
         children: [
           Text("${garbage.name} ${rule.name}"),
-          Positioned(
-            child: CloseButton(
-              onPressed: closeCallBack,
-              color: Colors.deepOrange,
-            ),
-          ),
         ],
       ),
     );

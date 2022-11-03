@@ -2,6 +2,7 @@
     {
         "name": "Poubelle Bleu",
         "imageUrl": "",
-        "garbage": 0
+        "garbage": 0,
+        "color": "blue"
     }
 ]
