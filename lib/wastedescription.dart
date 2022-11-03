@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_new
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -27,31 +29,73 @@ class WasteDescription extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            top: 0,
-            left: 0,
-            child: CloseButton(
-              onPressed: closeCallBack,
-              color: Colors.deepOrange,
+            top: 3,
+            left: 3,
+            child: SizedBox.square(
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(90),
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 5, color: Colors.black.withOpacity(0.5)),
+                    ]),
+                child: CloseButton(
+                  onPressed: closeCallBack,
+                  color: Colors.green,
+                ),
+              ),
             ),
           ),
           Center(
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Text(
                 "Déchet identifié: ${garbage.name}",
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  shadows: [Shadow(blurRadius: 5, color: Colors.greenAccent)],
+                ),
               ),
-              Image(image: garbage.image, semanticLabel: "Garbage picture"),
+              WrappedImage(
+                  provider: garbage.image, semanticLabel: "Garbage picture"),
               Text(
                 "Politique de tri: ${rule.name}",
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  shadows: [Shadow(blurRadius: 5, color: Colors.greenAccent)],
+                ),
               ),
-              Image(image: rule.image, semanticLabel: "Rule picture"),
+              WrappedImage(provider: rule.image, semanticLabel: "Rule picture"),
             ]),
           ),
         ],
       ),
+    );
+  }
+}
+
+class WrappedImage extends StatelessWidget {
+  final ImageProvider provider;
+  final String semanticLabel;
+
+  const WrappedImage(
+      {super.key, required this.provider, required this.semanticLabel});
+
+  @override
+  Widget build(BuildContext context) {
+    return Image(
+      image: provider,
+      semanticLabel: semanticLabel,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) {
+          return child;
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 }
