@@ -25,7 +25,7 @@ class WasteDescription extends StatelessWidget {
     return Container(
       width: size.width,
       height: size.height,
-      decoration: BoxDecoration(color: rule.color),
+      decoration: const BoxDecoration(color: Colors.lightGreen),
       child: Stack(
         children: [
           Positioned(
