@@ -36,12 +36,20 @@ class WasteDescription extends StatelessWidget {
           ),
           Center(
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Text("Déchet identifié: ${garbage.name}"),
+              Text(
+                "Déchet identifié: ${garbage.name}",
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
               Image(image: garbage.image, semanticLabel: "Garbage picture"),
-              Text("Politique de tri: ${rule.name}"),
+              Text(
+                "Politique de tri: ${rule.name}",
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
               Image(image: rule.image, semanticLabel: "Rule picture"),
             ]),
-          )
+          ),
         ],
       ),
     );
