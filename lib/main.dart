@@ -5,6 +5,7 @@ import 'package:recyclescan/rule.dart';
 import 'package:tflite/tflite.dart';
 import 'package:recyclescan/box.dart';
 
+import 'city.dart';
 import 'wastedescription.dart';
 
 GlobalKey _camPreviewSize = GlobalKey(debugLabel: "cam_size");
@@ -20,7 +21,7 @@ Size? _getCamSize() {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  initCities();
   final cameras = await availableCameras();
 
   final camera = cameras.first;
