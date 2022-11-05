@@ -1,0 +1,18 @@
+[
+    {
+        "name": "Dans le nouveau sac bleu",
+        "color": "blue",
+        "imageUrl": ""
+    },
+    {
+        "name": "A la collecte des déchets organiques",
+        "color": "white",
+        "imageUrl": ""
+    },
+    {
+        "name": "A la collecte des déchets ménagers résiduels",
+        "color": "grey",
+        "imageUrl": ""
+    }
+]
+
