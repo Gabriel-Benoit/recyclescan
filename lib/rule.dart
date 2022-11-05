@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:flutter/painting.dart';
+import 'dart:collection';
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -6,10 +9,10 @@ import 'package:recyclescan/garbage.dart';
 
 class Rule {
   final String name;
-  final ImageProvider imageUrl;
+  final ImageProvider image;
   final Color color;
 
-  const Rule({required this.name, required this.imageUrl, required this.color});
+  const Rule({required this.name, required this.image, required this.color});
 
   static Future<Map<Garbage, Rule>> fromJSON(String garbagesPath, String rulesPath)  async {
     // Load data from json file and wait for result
@@ -40,7 +43,7 @@ class Rule {
           break;
       }
       // Add new rule in the map
-      rules[gb] = Rule(name: jsonRules[ruleId]["name"], imageUrl: NetworkImage(jsonRules[ruleId]["imageUrl"]), color: color);
+      rules[gb] = Rule(name: jsonRules[ruleId]["name"], image: NetworkImage(jsonRules[ruleId]["imageUrl"]), color: color);
     }
 
     return rules;

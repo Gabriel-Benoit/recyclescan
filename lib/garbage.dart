@@ -2,7 +2,7 @@ import 'package:flutter/painting.dart';
 
 class Garbage {
   final String name;
-  final ImageProvider  image;
+  final ImageProvider image;
 
   const Garbage({required this.name, required this.image});
 }
@@ -16,3 +16,4 @@ final List<Garbage> garbages = [
   const Garbage(name: "Pneu de vélo", image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/3/38/Bicycle_tire_-_Cheng_Shin.jpg")),
   const Garbage(name: "Classeur en plastique", image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/d/d9/Lever_arch_file.jpg"))
 ];
+
