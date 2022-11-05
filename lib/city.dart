@@ -10,5 +10,5 @@ class City {
 }
 
 final List<City> cities = [
-  City(name: "Namur", postalCode: 5000, rules: Rule.fromJSON("assets/Namur.json"))
+  City(name: "Namur", postalCode: 5000, rules: Rule.fromJSON("assets/Namur_garbages.json", "assets/Namur_rules.json"))
 ];

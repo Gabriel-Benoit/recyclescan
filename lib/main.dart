@@ -12,7 +12,7 @@ Future<void> main() async {
 
   final camera = cameras.first;
 
-  final rules = await Rule.fromJSON("assets/Namur.json");
+  final rules = await Rule.fromJSON("assets/Namur_garbages.json", "assets/Namur_rules.json");
 
   runApp(MaterialApp(
     title: 'RecycleScan',
@@ -181,7 +181,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
           height: result["rect"]["h"] * size.height,
           color: Colors.green,
           onPressed: () {
-            _setGarbage(Garbage(name: result["detectedClass"], imageUrl: ""));
+            _setGarbage(garbages[0]);
             _pauseDetection();
           },
         )
@@ -192,7 +192,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
       widgets.add(
         WasteDescription(
           garbage: garbage!,
-          rule: const Rule(color: Colors.blue, imageUrl: "", name: "test"),
+          rule: const Rule(color: Colors.blue, imageUrl: NetworkImage(""), name: "test"),
          /* closeCallBack: () {
             _setGarbage(null);
             _beginDetection();

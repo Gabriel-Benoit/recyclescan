@@ -6,24 +6,28 @@ import 'package:recyclescan/garbage.dart';
 
 class Rule {
   final String name;
-  final String imageUrl;
+  final ImageProvider imageUrl;
   final Color color;
 
   const Rule({required this.name, required this.imageUrl, required this.color});
 
-  static Future<Map<Garbage, Rule>> fromJSON(String path)  async {
+  static Future<Map<Garbage, Rule>> fromJSON(String garbagesPath, String rulesPath)  async {
     // Load data from json file and wait for result
-    String data = await rootBundle.loadString(path);
-    final jsonRules = json.decode(data);
+    String data = await rootBundle.loadString(garbagesPath);
+    final jsonGarbages = json.decode(data);
+
+    String data2 = await rootBundle.loadString(rulesPath);
+    final jsonRules = json.decode(data2);
 
     // Init and fill rules map
     Map<Garbage, Rule> rules = {};
-    for(var i = 0 ; i < jsonRules.length;i++) {
+    for(var i = 0 ; i < garbages.length;i++) {
       // Find corresponding garbage
-      Garbage gb = garbages[jsonRules[i]["garbage"]];
+      Garbage gb = garbages[jsonGarbages[i]["garbage_id"]];
+      var ruleId = jsonGarbages[i]["rule_id"];
 
       // Match correct color (String -> Color)
-      String colStr = jsonRules[i]["color"];
+      String colStr = jsonRules[ruleId]["color"];
       Color color;
       switch(colStr) {
         case "blue": {color = Colors.blue;}
@@ -36,7 +40,7 @@ class Rule {
           break;
       }
       // Add new rule in the map
-      rules[gb] = Rule(name: jsonRules[i]["name"], imageUrl:jsonRules[i]["imageUrl"], color: color);
+      rules[gb] = Rule(name: jsonRules[ruleId]["name"], imageUrl: NetworkImage(jsonRules[ruleId]["imageUrl"]), color: color);
     }
 
     return rules;
