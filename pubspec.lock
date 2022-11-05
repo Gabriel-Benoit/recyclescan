@@ -42,7 +42,7 @@ packages:
       name: camera_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.2"
+    version: "2.3.0"
   camera_web:
     dependency: transitive
     description:
@@ -134,7 +134,7 @@ packages:
       name: lints
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   matcher:
     dependency: transitive
     description:
@@ -236,7 +236,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: a2c28cbf07a79fa0c3b0435c811b4e011fb07464
+      resolved-ref: fdd84f8a304e0f8cd7e4aec89264f3d99987e2b9
       url: "https://github.com/BergLucas/flutter_tflite.git"
     source: git
     version: "1.1.2"
