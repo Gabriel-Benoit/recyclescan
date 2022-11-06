@@ -104,7 +104,6 @@ class _ObjectDetectorState extends State<ObjectDetector> {
   Widget build(BuildContext context) {
     Size? size = _getCamSize();
     size ??= const Size(0.0, 0.0);
-    print(size);
     List<Widget> widgets = [];
 
     widgets.add(preview);
