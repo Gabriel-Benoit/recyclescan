@@ -34,6 +34,13 @@ class _WidgetManagerState extends State<WidgetManager> {
   Widget _currentWidget = Container();
   final _tileStyle = ListTileStyle.drawer;
 
+  void _setWidget(Widget w){
+    setState(() {
+      _currentWidget = w;
+    });
+    Navigator.pop(context);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -57,23 +64,17 @@ class _WidgetManagerState extends State<WidgetManager> {
               title: const Text("Camera"),
               style: _tileStyle,
               textColor: Colors.lightGreen,
-              onTap: (() {
-                setState(() {
-                  _currentWidget = HomePage(camera: widget.camera);
-                });
-                Navigator.pop(context);
-              }),
+              onTap: (() =>
+                 _setWidget(HomePage(camera: widget.camera))
+              ),
             ),
             ListTile(
               title: const Text("A propos de nous"),
               style: _tileStyle,
               textColor: Colors.lightGreen,
-              onTap: (() {
-                setState(() {
-                  _currentWidget = const PlaceHolder();
-                });
-                Navigator.pop(context);
-              }),
+              onTap: (() =>
+                  _setWidget(const PlaceHolder())
+              ),
             )
           ],
         ),
