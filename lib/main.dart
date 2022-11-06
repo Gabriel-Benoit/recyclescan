@@ -3,6 +3,7 @@ import 'package:camera/camera.dart';
 
 import 'city.dart';
 import 'detector/home.dart';
+import 'utils/placeholder.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,7 @@ class WidgetManager extends StatefulWidget {
 
 class _WidgetManagerState extends State<WidgetManager> {
   Widget _currentWidget = Container();
+  final _tileStyle = ListTileStyle.drawer;
 
   @override
   void initState() {
@@ -52,7 +54,26 @@ class _WidgetManagerState extends State<WidgetManager> {
               ),
             ),
             ListTile(
-              onTap: (() {}),
+              title: const Text("Camera"),
+              style: _tileStyle,
+              textColor: Colors.lightGreen,
+              onTap: (() {
+                setState(() {
+                  _currentWidget = HomePage(camera: widget.camera);
+                });
+                Navigator.pop(context);
+              }),
+            ),
+            ListTile(
+              title: const Text("A propos de nous"),
+              style: _tileStyle,
+              textColor: Colors.lightGreen,
+              onTap: (() {
+                setState(() {
+                  _currentWidget = const PlaceHolder();
+                });
+                Navigator.pop(context);
+              }),
             )
           ],
         ),
