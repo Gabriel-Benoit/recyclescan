@@ -17,19 +17,19 @@ Future<void> main() async {
       primarySwatch: Colors.green,
       bottomAppBarColor: Colors.green,
     ),
-    home: WidgetMananger(camera: camera),
+    home: WidgetManager(camera: camera),
   ));
 }
 
-class WidgetMananger extends StatefulWidget {
+class WidgetManager extends StatefulWidget {
   final CameraDescription camera;
-  const WidgetMananger({super.key, required this.camera});
+  const WidgetManager({super.key, required this.camera});
 
   @override
-  State<StatefulWidget> createState() => _WidgetManangerState();
+  State<StatefulWidget> createState() => _WidgetManagerState();
 }
 
-class _WidgetManangerState extends State<WidgetMananger> {
+class _WidgetManagerState extends State<WidgetManager> {
   Widget _currentWidget = Container();
 
   @override
