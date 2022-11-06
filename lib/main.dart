@@ -32,7 +32,7 @@ class WidgetManager extends StatefulWidget {
 
 class _WidgetManagerState extends State<WidgetManager> {
   Widget _currentWidget = Container();
-  final _tileStyle = ListTileStyle.drawer;
+  final _tileStyle = ListTileStyle.list;
 
   void _setWidget(Widget w){
     setState(() {
@@ -66,6 +66,14 @@ class _WidgetManagerState extends State<WidgetManager> {
               textColor: Colors.lightGreen,
               onTap: (() =>
                  _setWidget(HomePage(camera: widget.camera))
+              ),
+            ),
+            ListTile(
+              title: const Text("Signaler un déchet mal identifié"),
+              style: _tileStyle,
+              textColor: Colors.lightGreen,
+              onTap: (() =>
+                  _setWidget(const PlaceHolder())
               ),
             ),
             ListTile(
