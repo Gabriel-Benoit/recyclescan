@@ -5,9 +5,17 @@ class PlaceHolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return  Container(
       decoration: const BoxDecoration(color: Colors.blueGrey),
-      child: const Text("Placeholder"),
+      child: Center(
+        child: Column(
+          children: const [
+            Expanded(
+              child: Text("Placeholder"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
