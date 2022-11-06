@@ -1,11 +1,7 @@
-// ignore_for_file: unnecessary_new
-
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
-import 'garbage.dart';
-import 'rule.dart';
+import '../garbage.dart';
+import '../rule.dart';
 
 class WasteDescription extends StatelessWidget {
   final Garbage garbage;
@@ -25,7 +21,7 @@ class WasteDescription extends StatelessWidget {
     return Container(
       width: size.width,
       height: size.height,
-      decoration: const BoxDecoration(color: Colors.lightGreen),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Stack(
         children: [
           Positioned(
@@ -53,9 +49,8 @@ class WasteDescription extends StatelessWidget {
                 "Déchet identifié: ${garbage.name}",
                 style: const TextStyle(
                   fontSize: 24,
-                  color: Colors.white,
+                  color: Colors.lightGreen,
                   fontWeight: FontWeight.bold,
-                  shadows: [Shadow(blurRadius: 5, color: Colors.greenAccent)],
                 ),
               ),
               WrappedImage(
@@ -64,9 +59,8 @@ class WasteDescription extends StatelessWidget {
                 "Politique de tri: ${rule.name}",
                 style: const TextStyle(
                   fontSize: 24,
-                  color: Colors.white,
+                  color: Colors.lightGreen,
                   fontWeight: FontWeight.bold,
-                  shadows: [Shadow(blurRadius: 5, color: Colors.greenAccent)],
                 ),
               ),
               WrappedImage(provider: rule.image, semanticLabel: "Rule picture"),
