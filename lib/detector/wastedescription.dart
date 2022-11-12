@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recyclescan/utils/customclosebutton.dart';
 
 import '../garbage.dart';
 import '../rule.dart';
@@ -7,6 +8,11 @@ class WasteDescription extends StatelessWidget {
   final Garbage garbage;
   final Rule rule;
   final void Function() closeCallBack;
+  final TextStyle _style = const TextStyle(
+    fontSize: 24,
+    color: Colors.lightGreen,
+    fontWeight: FontWeight.bold,
+  );
 
   const WasteDescription(
       {super.key,
@@ -27,44 +33,26 @@ class WasteDescription extends StatelessWidget {
           Positioned(
             top: 3,
             left: 3,
-            child: SizedBox.square(
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(90),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 5, color: Colors.black.withOpacity(0.5)),
-                    ]),
-                child: CloseButton(
-                  onPressed: closeCallBack,
-                  color: Colors.green,
-                ),
-              ),
-            ),
+            child: CustomCloseButton(closeCallBack: closeCallBack),
           ),
           Center(
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Text(
-                "Déchet identifié: ${garbage.name}",
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.lightGreen,
-                  fontWeight: FontWeight.bold,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Déchet identifié: ${garbage.name}",
+                  style: _style,
                 ),
-              ),
-              WrappedImage(
-                  provider: garbage.image, semanticLabel: "Garbage picture"),
-              Text(
-                "Politique de tri: ${rule.name}",
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.lightGreen,
-                  fontWeight: FontWeight.bold,
+                WrappedImage(
+                    provider: garbage.image, semanticLabel: "Garbage picture"),
+                Text(
+                  "Politique de tri: ${rule.name}",
+                  style: _style,
                 ),
-              ),
-              WrappedImage(provider: rule.image, semanticLabel: "Rule picture"),
-            ]),
+                WrappedImage(
+                    provider: rule.image, semanticLabel: "Rule picture"),
+              ],
+            ),
           ),
         ],
       ),
@@ -90,6 +78,24 @@ class WrappedImage extends StatelessWidget {
         }
         return const Center(child: CircularProgressIndicator());
       },
+    );
+  }
+}
+
+class AdviceText extends StatelessWidget {
+  final String? text;
+  final TextStyle? style;
+
+  const AdviceText({super.key, this.text, this.style});
+
+  @override
+  Widget build(BuildContext context) {
+    if (text == null) {
+      return const SizedBox.shrink();
+    }
+    return Text(
+      text!,
+      style: style,
     );
   }
 }
