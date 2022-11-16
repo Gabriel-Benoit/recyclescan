@@ -54,9 +54,10 @@ class _ObjectDetectorState extends State<ObjectDetector> {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     super.dispose();
-    _pauseDetection();
+    await _pauseDetection();
+    await widget.controller.dispose();
   }
 
   Future<void> _beginDetection() async {
@@ -80,6 +81,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
           numBoxesPerBlock: 5,
           asynch: true);
       busy = false;
+      if (!isDetectionStarted) return;
       setState(() {
         this.recognitions = recognitions ?? [];
         this.image = image;
@@ -95,6 +97,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
   }
 
   void _setGarbage(Garbage? garbage) {
+    if (!isDetectionStarted) return;
     setState(() {
       this.garbage = garbage;
     });
@@ -104,7 +107,6 @@ class _ObjectDetectorState extends State<ObjectDetector> {
   Widget build(BuildContext context) {
     Size? size = _getCamSize();
     size ??= const Size(0.0, 0.0);
-    print(size);
     List<Widget> widgets = [];
 
     widgets.add(preview);

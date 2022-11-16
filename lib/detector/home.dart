@@ -17,7 +17,6 @@ class _HomePageState extends State<HomePage> {
   late final CameraController _controller;
   late final Future<void> _initialized;
   late final bool busy = false;
-
   @override
   void initState() {
     super.initState();
@@ -35,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() async {
     super.dispose();
-    await Future.wait([_controller.dispose(), Tflite.close()]);
+    await Future.wait([Tflite.close()]);
   }
 
 // Ajouter une var de state qui est la vue à afficher
