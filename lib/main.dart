@@ -54,7 +54,7 @@ class _WidgetManagerState extends State<WidgetManager> {
   @override
   void initState() {
     super.initState();
-    if (widget.prefs.getStringList("location") == null) {
+    if (widget.prefs.getString("location") == null) {
       _currentWidget = LocationPage(
         okHandler: () =>
             _setWidget(HomePage(camera: widget.camera), popCtx: false),
