@@ -105,6 +105,25 @@ class _ObjectDetectorState extends State<ObjectDetector> {
 
   @override
   Widget build(BuildContext context) {
+    if (garbage != null) {
+      return Stack(
+        children: [
+          WasteDescription(
+            garbage: garbage!,
+            rule: const Rule(
+                color: Color.fromARGB(255, 101, 166, 219),
+                image: NetworkImage(
+                    "https://upload.wikimedia.org/wikipedia/commons/6/6c/Tolkki20091027.jpg"),
+                name: "test"),
+            closeCallBack: () {
+              _setGarbage(null);
+              _beginDetection();
+            },
+          )
+        ],
+      );
+    }
+
     Size? size = _getCamSize();
     size ??= const Size(0.0, 0.0);
     List<Widget> widgets = [];
@@ -132,23 +151,6 @@ class _ObjectDetectorState extends State<ObjectDetector> {
         ),
       ),
     );
-
-    if (garbage != null) {
-      widgets.add(
-        WasteDescription(
-          garbage: garbage!,
-          rule: const Rule(
-              color: Color.fromARGB(255, 101, 166, 219),
-              image: NetworkImage(
-                  "https://upload.wikimedia.org/wikipedia/commons/6/6c/Tolkki20091027.jpg"),
-              name: "test"),
-          closeCallBack: () {
-            _setGarbage(null);
-            _beginDetection();
-          },
-        ),
-      );
-    }
 
     return Stack(
       children: widgets,

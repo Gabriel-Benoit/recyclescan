@@ -24,6 +24,19 @@ class WasteDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    List<Widget> advice = garbage.comments.map((e) {
+      return GestureDetector(
+        onTap: e.second(),
+        child: AdviceText(
+          text: e.first(),
+          style: TextStyle(
+              fontSize: 18,
+              color: Colors.lightGreen,
+              decoration: e.second() == null ? TextDecoration.underline : null),
+        ),
+      );
+    }).toList();
+
     return Container(
       width: size.width,
       height: size.height,
@@ -36,21 +49,37 @@ class WasteDescription extends StatelessWidget {
             child: CustomCloseButton(closeCallBack: closeCallBack),
           ),
           Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+            child: Table(
+              columnWidths: {0: FractionColumnWidth(1), 1: FlexColumnWidth()},
               children: [
-                Text(
-                  "Déchet identifié: ${garbage.name}",
-                  style: _style,
-                ),
-                WrappedImage(
-                    provider: garbage.image, semanticLabel: "Garbage picture"),
-                Text(
-                  "Politique de tri: ${rule.name}",
-                  style: _style,
-                ),
-                WrappedImage(
-                    provider: rule.image, semanticLabel: "Rule picture"),
+                TableRow(
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Déchet identifié: ${garbage.name}",
+                          textAlign: TextAlign.center,
+                          style: _style,
+                        ),
+                        WrappedImage(
+                            provider: garbage.image,
+                            semanticLabel: "Garbage picture"),
+                        Text(
+                          "Politique de tri: ${rule.name}",
+                          textAlign: TextAlign.center,
+                          style: _style,
+                        ),
+                        WrappedImage(
+                            provider: rule.image,
+                            semanticLabel: "Rule picture"),
+                      ],
+                    ),
+                    Column(
+                      children: advice,
+                    ),
+                  ],
+                )
               ],
             ),
           ),
