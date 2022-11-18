@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:recyclescan/location/locationpage.dart';
+import 'package:recyclescan/utils/screenorientation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'city.dart';
 import 'detector/home.dart';
@@ -11,11 +12,22 @@ Future<void> main() async {
   initCities();
   final cameras = await availableCameras();
   final prefs = await SharedPreferences.getInstance();
-  //await prefs.remove("location");
   final camera = cameras.first;
-
   runApp(
-    MaterialApp(
+    App(camera: camera, prefs: prefs),
+  );
+}
+
+class App extends StatelessWidget with PortraitModeMixin {
+  final CameraDescription camera;
+  final SharedPreferences prefs;
+
+  const App({super.key, required this.camera, required this.prefs});
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return MaterialApp(
       title: 'RecycleScan',
       theme: ThemeData(
         primarySwatch: Colors.green,
@@ -25,8 +37,8 @@ Future<void> main() async {
         camera: camera,
         prefs: prefs,
       ),
-    ),
-  );
+    );
+  }
 }
 
 class WidgetManager extends StatefulWidget {
