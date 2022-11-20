@@ -13,6 +13,16 @@
         "name": "A la collecte des déchets ménagers résiduels",
         "color": "grey",
         "imageUrl": ""
+    },
+    {
+        "name": "Dans les bulles à verre",
+        "color": "green",
+        "imageUrl": ""
+    },
+    {
+        "name": "A la collecte des papiers-carton ou au recyparc - papiers-cartons",
+        "color": "orange",
+        "imageUrl": ""
     }
 ]
 
