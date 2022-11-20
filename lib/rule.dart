@@ -26,7 +26,7 @@ class Rule {
     Map<Garbage, Rule> rules = {};
     for(var i = 0 ; i < garbages.length;i++) {
       // Find corresponding garbage
-      Garbage gb = garbages[jsonGarbages[i]["garbage_id"]];
+      Garbage gb = garbages[jsonGarbages[i]["garbage_id"]]!;
       var ruleId = jsonGarbages[i]["rule_id"];
 
       // Match correct color (String -> Color)

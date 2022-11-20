@@ -2,34 +2,27 @@
     {
         "name": "Dans le nouveau sac bleu",
         "color": "blue",
-        "imageUrl": "",
-        "comments": []
-    },
-    {
-        "name": "Dans le nouveau sac bleu",
-        "color": "blue",
-        "imageUrl": "",
-        "comments":
-        [
-            "Si la bouteille est en verre, elle se trie dans les bulles à verre.",
-            "Si la bouteille contient des produits corrosifs et-ou toxiques, elle se trie au recyparc - DSM (déchets spéciaux des ménages)",
-            "Les bouchons de bouteille de vin, de champagne et de cidre se trient au recyparc - bouchons de liège "
-        ]
+        "imageUrl": ""
     },
     {
         "name": "A la collecte des déchets organiques",
         "color": "white",
-        "imageUrl": "",
-        "comments": []
+        "imageUrl": ""
     },
     {
         "name": "A la collecte des déchets ménagers résiduels",
         "color": "grey",
-        "imageUrl": "",
-        "comments":
-        [
-            "Si le sachet est en papier, il se trie à la collecte des déchets organiques"
-        ]
+        "imageUrl": ""
+    },
+    {
+        "name": "Dans les bulles à verre",
+        "color": "green",
+        "imageUrl": ""
+    },
+    {
+        "name": "A la collecte des papiers-carton ou au recyparc - papiers-cartons",
+        "color": "orange",
+        "imageUrl": ""
     }
 ]
 

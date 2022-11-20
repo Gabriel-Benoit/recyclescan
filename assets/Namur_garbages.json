@@ -1,22 +1,30 @@
 [
     {
-        "garbage_id": 0,
+        "garbage_id": "can",
         "rule_id": 0
     },
     {
-        "garbage_id": 1,
-        "rule_id": 1
+        "garbage_id": "bottle",
+        "rule_id": 0
     },
     {
-        "garbage_id": 2,
+        "garbage_id": "glassbottle",
+        "rule_id": 3
+    },
+    {
+        "garbage_id": "teabag",
         "rule_id": 2
     },
     {
-        "garbage_id": 3,
-        "rule_id": 0
+        "garbage_id": "paperteabag",
+        "rule_id": 4
     },
     {
-        "garbage_id": 4,
-        "rule_id": 3
+        "garbage_id": "pizzabox",
+        "rule_id": 1
+    },
+    {
+        "garbage_id": "toothpaste",
+        "rule_id": 0
     }
 ]
