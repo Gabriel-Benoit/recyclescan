@@ -6,6 +6,9 @@ import '../rule.dart';
 
 class WasteDescription extends StatelessWidget {
   final Garbage garbage;
+  late Map<String, Garbage> _altenatives;
+  late List<String> _comments;
+
   final Rule rule;
   final void Function() closeCallBack;
   final TextStyle _style = const TextStyle(
@@ -14,28 +17,31 @@ class WasteDescription extends StatelessWidget {
     fontWeight: FontWeight.bold,
   );
 
-  const WasteDescription(
+  WasteDescription(
       {super.key,
       required this.garbage,
       required this.rule,
-      required this.closeCallBack});
+      required this.closeCallBack}) {
+    _altenatives = alternatives[garbage] ?? {};
+    _comments = comments[garbage] ?? [];
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    List<Widget> advice = garbage.comments.map((e) {
-      return GestureDetector(
-        onTap: e.second(),
-        child: AdviceText(
-          text: e.first(),
-          style: TextStyle(
-              fontSize: 18,
-              color: Colors.lightGreen,
-              decoration: e.second() == null ? TextDecoration.underline : null),
-        ),
-      );
-    }).toList();
+    List<Widget> advice = [];
+    //List<Widget> advice = _altenatives.map((gb, ) {
+    //  return GestureDetector(
+    //    onTap: e.second(),
+    //    child: AdviceText(
+    //      text: e.first(),
+    //      style: TextStyle(
+    //          fontSize: 18,
+    //          color: Colors.lightGreen,
+    //          decoration: e.second() == null ? TextDecoration.underline : null),
+    //    ),
+    //  );
+    //}).toList();
 
     return Container(
       width: size.width,
