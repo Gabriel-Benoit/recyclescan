@@ -5,12 +5,10 @@ import 'utils/pair.dart';
 class Garbage {
   final String name;
   final ImageProvider image;
-  final List<Pair<String, void Function()?>> comments;
 
   const Garbage({
     required this.name,
     required this.image,
-    this.comments = const <Pair<String, void Function()?>>[],
   });
 }
 
