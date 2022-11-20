@@ -42,9 +42,7 @@ final Map<Garbage, Map<String, Garbage>> alternatives = {
   garbages["bottle"]!: {
     "Cette bouteille est en verre ?": garbages["glassbottle"]!
   },
-  garbages["teabag"]!: {
-    "Cette sachet est en papier ?": garbages["paperteabag"]!
-  }
+  garbages["teabag"]!: {"Ce sachet est en papier ?": garbages["paperteabag"]!}
 };
 final Map<Garbage, List<String>> comments = {
   garbages["toothpaste"]!: ["Le tube doit être vide."],
