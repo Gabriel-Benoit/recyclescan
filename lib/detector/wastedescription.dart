@@ -6,43 +6,52 @@ import '../rule.dart';
 
 class WasteDescription extends StatelessWidget {
   final Garbage garbage;
-  late Map<String, Garbage> _altenatives;
-  late List<String> _comments;
 
   final Rule rule;
   final void Function() closeCallBack;
+  final void Function(Garbage?) changeGarbageCallBack;
   final TextStyle _style = const TextStyle(
     fontSize: 24,
     color: Colors.lightGreen,
     fontWeight: FontWeight.bold,
   );
 
-  WasteDescription(
+  const WasteDescription(
       {super.key,
       required this.garbage,
       required this.rule,
-      required this.closeCallBack}) {
-    _altenatives = alternatives[garbage] ?? {};
-    _comments = comments[garbage] ?? [];
-  }
+      required this.closeCallBack,
+      required this.changeGarbageCallBack});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List<Widget> advice = [];
-    //List<Widget> advice = _altenatives.map((gb, ) {
-    //  return GestureDetector(
-    //    onTap: e.second(),
-    //    child: AdviceText(
-    //      text: e.first(),
-    //      style: TextStyle(
-    //          fontSize: 18,
-    //          color: Colors.lightGreen,
-    //          decoration: e.second() == null ? TextDecoration.underline : null),
-    //    ),
-    //  );
-    //}).toList();
-
+    var alternatives_ = alternatives[garbage] ?? {};
+    var comments_ = comments[garbage] ?? [];
+    List<Widget> advice = alternatives_.entries.map((entry) {
+      var garbage = entry.value;
+      var txt = entry.key;
+      return GestureDetector(
+        onTap: (() {
+          changeGarbageCallBack(garbage);
+        }),
+        child: AdviceText(
+          text: txt,
+          style: const TextStyle(
+              fontSize: 18,
+              color: Colors.lightGreen,
+              decoration: TextDecoration.underline),
+        ),
+      );
+    }).toList();
+    advice.addAll(comments_.map((com) {
+      return GestureDetector(
+        child: AdviceText(
+          text: com,
+          style: const TextStyle(fontSize: 18, color: Colors.lightGreen),
+        ),
+      );
+    }).toList());
     return Container(
       width: size.width,
       height: size.height,
@@ -50,42 +59,28 @@ class WasteDescription extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            top: 3,
-            left: 3,
+            bottom: 3,
+            right: 3,
             child: CustomCloseButton(closeCallBack: closeCallBack),
           ),
           Center(
-            child: Table(
-              columnWidths: {0: FractionColumnWidth(1), 1: FlexColumnWidth()},
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                TableRow(
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Déchet identifié: ${garbage.name}",
-                          textAlign: TextAlign.center,
-                          style: _style,
-                        ),
-                        WrappedImage(
-                            provider: garbage.image,
-                            semanticLabel: "Garbage picture"),
-                        Text(
-                          "Politique de tri: ${rule.name}",
-                          textAlign: TextAlign.center,
-                          style: _style,
-                        ),
-                        WrappedImage(
-                            provider: rule.image,
-                            semanticLabel: "Rule picture"),
-                      ],
-                    ),
-                    Column(
-                      children: advice,
-                    ),
-                  ],
-                )
+                Text(
+                  "Déchet identifié: ${garbage.name}",
+                  textAlign: TextAlign.center,
+                  style: _style,
+                ),
+                WrappedImage(
+                    provider: garbage.image, semanticLabel: "Garbage picture"),
+                Text(
+                  "Politique de tri: ${rule.name}",
+                  textAlign: TextAlign.center,
+                  style: _style,
+                ),
+                WrappedImage(
+                    provider: rule.image, semanticLabel: "Rule picture"),
               ],
             ),
           ),
@@ -104,15 +99,20 @@ class WrappedImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image(
-      image: provider,
-      semanticLabel: semanticLabel,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) {
-          return child;
-        }
-        return const Center(child: CircularProgressIndicator());
-      },
+    return SizedBox(
+      width: 100,
+      height: 200,
+      child: Image(
+        image: provider,
+        semanticLabel: semanticLabel,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+        fit: BoxFit.fill,
+      ),
     );
   }
 }
@@ -133,4 +133,17 @@ class AdviceText extends StatelessWidget {
       style: style,
     );
   }
+}
+
+bottomSheetDisplay(List<GestureDetector> advice) {
+  return (BuildContext ctx) {
+    return Container(
+      decoration: BoxDecoration(),
+      child: Center(
+        child: Column(
+          children: advice,
+        ),
+      ),
+    );
+  };
 }

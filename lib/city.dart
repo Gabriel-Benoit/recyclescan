@@ -11,13 +11,12 @@ class City {
 }
 
 final List<City> cities = [];
-void initCities() async {
+initCities(rules) {
   cities.add(
     City(
       name: "Namur",
       postalCode: 5000,
-      rules: await Rule.fromJSON(
-          "assets/Namur_garbages.json", "assets/Namur_rules.json"),
+      rules: rules,
     ),
   );
 }

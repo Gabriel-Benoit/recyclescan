@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:recyclescan/location/locationpage.dart';
+import 'package:recyclescan/rule.dart';
+import 'package:recyclescan/utils/dynamictext.dart';
 import 'package:recyclescan/utils/screenorientation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'city.dart';
 import 'detector/home.dart';
 import 'utils/placeholder.dart';
 
+GlobalKey<DynamicTextState> title = GlobalKey();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  initCities();
+  await initRules();
+  initCities(rules);
   final cameras = await availableCameras();
   final prefs = await SharedPreferences.getInstance();
   final camera = cameras.first;
@@ -80,7 +85,7 @@ class _WidgetManagerState extends State<WidgetManager> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('RecycleScan')),
+      appBar: AppBar(title: DynamicText(key: title, 'RecycleScan')),
       drawer: Drawer(
         child: ListView(
           children: [

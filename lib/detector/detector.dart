@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:recyclescan/detector/wastedescription.dart';
+import 'package:recyclescan/main.dart';
 import 'package:tflite/tflite.dart';
 
 import '../garbage.dart';
@@ -97,6 +98,11 @@ class _ObjectDetectorState extends State<ObjectDetector> {
   }
 
   void _setGarbage(Garbage? garbage) {
+    if (garbage == null) {
+      title.currentState!.defaultText();
+    } else {
+      title.currentState!.setText(garbage.name);
+    }
     if (!isDetectionStarted) return;
     setState(() {
       this.garbage = garbage;
@@ -110,14 +116,19 @@ class _ObjectDetectorState extends State<ObjectDetector> {
         children: [
           WasteDescription(
             garbage: garbage!,
+            changeGarbageCallBack: (g) async {
+              await _beginDetection();
+              _setGarbage(g);
+              await _pauseDetection();
+            },
             rule: const Rule(
                 color: Color.fromARGB(255, 101, 166, 219),
                 image: NetworkImage(
                     "https://upload.wikimedia.org/wikipedia/commons/6/6c/Tolkki20091027.jpg"),
                 name: "test"),
-            closeCallBack: () {
+            closeCallBack: () async {
+              await _beginDetection();
               _setGarbage(null);
-              _beginDetection();
             },
           )
         ],
@@ -139,13 +150,13 @@ class _ObjectDetectorState extends State<ObjectDetector> {
           height: result["rect"]["h"] * size.height,
           color: Colors.green,
           onPressed: () {
-            _setGarbage(
-              Garbage(
-                name: result["detectedClass"],
-                image: const NetworkImage(
-                    "https://upload.wikimedia.org/wikipedia/commons/6/6c/Tolkki20091027.jpg"),
-              ),
-            );
+            _setGarbage(garbages["bottle"]!
+                //Garbage(
+                //  name: result["detectedClass"],
+                //  image: const NetworkImage(
+                //      "https://upload.wikimedia.org/wikipedia/commons/6/6c/Tolkki20091027.jpg"),
+                //),
+                );
             _pauseDetection();
           },
         ),

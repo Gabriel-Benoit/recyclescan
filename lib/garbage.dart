@@ -1,7 +1,5 @@
 import 'package:flutter/painting.dart';
 
-import 'utils/pair.dart';
-
 class Garbage {
   final String name;
   final ImageProvider image;

@@ -64,3 +64,9 @@ class Rule {
     return rules;
   }
 }
+
+Map<Garbage, Rule> rules = {};
+Future<void> initRules() async {
+  rules = await Rule.fromJSON(
+      "assets/Namur_garbages.json", "assets/Namur_rules.json");
+}
