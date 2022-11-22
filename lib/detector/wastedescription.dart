@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:recyclescan/utils/customclosebutton.dart';
 
@@ -10,11 +11,6 @@ class WasteDescription extends StatelessWidget {
   final Rule rule;
   final void Function() closeCallBack;
   final void Function(Garbage?) changeGarbageCallBack;
-  final TextStyle _style = const TextStyle(
-    fontSize: 24,
-    color: Colors.lightGreen,
-    fontWeight: FontWeight.bold,
-  );
 
   const WasteDescription(
       {super.key,
@@ -26,32 +22,23 @@ class WasteDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var imgWidth = 2 * size.width / 3;
+    var imgHeight = 2 * size.width / 3;
     var alternatives_ = alternatives[garbage] ?? {};
     var comments_ = comments[garbage] ?? [];
-    List<Widget> advice = alternatives_.entries.map((entry) {
-      var garbage = entry.value;
-      var txt = entry.key;
-      return GestureDetector(
-        onTap: (() {
-          changeGarbageCallBack(garbage);
-        }),
-        child: AdviceText(
-          text: txt,
-          style: const TextStyle(
-              fontSize: 18,
-              color: Colors.lightGreen,
-              decoration: TextDecoration.underline),
-        ),
-      );
+
+    // Adding questions with redirections
+    List<Widget> questions = alternatives_.entries.map((entry) {
+      return genCarouselElem(entry.key, () {
+        changeGarbageCallBack(entry.value);
+      }, TextDecoration.underline);
     }).toList();
-    advice.addAll(comments_.map((com) {
-      return GestureDetector(
-        child: AdviceText(
-          text: com,
-          style: const TextStyle(fontSize: 18, color: Colors.lightGreen),
-        ),
-      );
-    }).toList());
+
+    // Adding comments
+    List<Widget> coms = comments_.map((com) {
+      return genCarouselElem(com, null, TextDecoration.none);
+    }).toList();
+
     return Container(
       width: size.width,
       height: size.height,
@@ -59,28 +46,52 @@ class WasteDescription extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            bottom: 3,
+            top: 3,
             right: 3,
             child: CustomCloseButton(closeCallBack: closeCallBack),
           ),
           Center(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Déchet identifié: ${garbage.name}",
-                  textAlign: TextAlign.center,
-                  style: _style,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Column(
+                  children: [
+                    const Text(
+                      "Où jeter ce déchet ?",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      rule.name,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: rule.color,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
                 WrappedImage(
-                    provider: garbage.image, semanticLabel: "Garbage picture"),
-                Text(
-                  "Politique de tri: ${rule.name}",
-                  textAlign: TextAlign.center,
-                  style: _style,
-                ),
-                WrappedImage(
-                    provider: rule.image, semanticLabel: "Rule picture"),
+                    height: imgHeight,
+                    width: imgWidth,
+                    provider: rule.image,
+                    semanticLabel: "Rule picture"),
+                CarouselSlider(
+                  items: [...questions, ...coms],
+                  options: CarouselOptions(
+                    height: 200.0,
+                    autoPlay: true,
+                    autoPlayInterval: Duration(seconds: 3),
+                    autoPlayAnimationDuration: Duration(milliseconds: 800),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                  ),
+                )
               ],
             ),
           ),
@@ -93,15 +104,21 @@ class WasteDescription extends StatelessWidget {
 class WrappedImage extends StatelessWidget {
   final ImageProvider provider;
   final String semanticLabel;
+  final double height;
+  final double width;
 
   const WrappedImage(
-      {super.key, required this.provider, required this.semanticLabel});
+      {super.key,
+      required this.provider,
+      required this.semanticLabel,
+      required this.width,
+      required this.height});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 100,
-      height: 200,
+      width: width,
+      height: height,
       child: Image(
         image: provider,
         semanticLabel: semanticLabel,
@@ -111,39 +128,43 @@ class WrappedImage extends StatelessWidget {
           }
           return const Center(child: CircularProgressIndicator());
         },
-        fit: BoxFit.fill,
+        fit: BoxFit.cover,
       ),
     );
   }
 }
 
-class AdviceText extends StatelessWidget {
-  final String? text;
-  final TextStyle? style;
-
-  const AdviceText({super.key, this.text, this.style});
-
-  @override
-  Widget build(BuildContext context) {
-    if (text == null) {
-      return const SizedBox.shrink();
-    }
-    return Text(
-      text!,
-      style: style,
-    );
-  }
-}
-
-bottomSheetDisplay(List<GestureDetector> advice) {
-  return (BuildContext ctx) {
+Widget genCarouselElem(
+    String text, void Function()? onTap, TextDecoration textDecoration) {
+  return Builder(builder: (ctx) {
     return Container(
-      decoration: BoxDecoration(),
-      child: Center(
-        child: Column(
-          children: advice,
+      margin: EdgeInsets.symmetric(horizontal: 10),
+      child: SizedBox.expand(
+        child: Container(
+          color: Color.fromARGB(255, 245, 245, 245),
+          child: SingleChildScrollView(
+            child: GestureDetector(
+              onTap: onTap,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: Text(
+                  text,
+
+                  //overflow: TextOverflow.visible,
+                  style: TextStyle(
+                      fontSize: 18,
+                      height: 1.4,
+                      letterSpacing: 1.5,
+                      color:
+                          Color.fromARGB(255, 80, 80, 80), //Colors.lightGreen,
+                      decoration: textDecoration),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
-  };
+  });
 }

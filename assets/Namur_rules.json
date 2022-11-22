@@ -2,27 +2,27 @@
     {
         "name": "Dans le nouveau sac bleu",
         "color": "blue",
-        "imageUrl": ""
+        "imageUrl": "assets/pictures/PMC.png"
     },
     {
         "name": "A la collecte des déchets organiques",
         "color": "white",
-        "imageUrl": ""
+        "imageUrl": "assets/pictures/ORG.png"
     },
     {
         "name": "A la collecte des déchets ménagers résiduels",
         "color": "grey",
-        "imageUrl": ""
+        "imageUrl": "assets/pictures/OMB.png"
     },
     {
         "name": "Dans les bulles à verre",
         "color": "green",
-        "imageUrl": ""
+        "imageUrl": "assets/pictures/BULAVERS.png"
     },
     {
         "name": "A la collecte des papiers-carton ou au recyparc - papiers-cartons",
         "color": "orange",
-        "imageUrl": ""
+        "imageUrl": "assets/pictures/CRT.png"
     }
 ]
 

@@ -45,6 +45,7 @@ dependencies:
       url: https://github.com/BergLucas/flutter_tflite.git
       ref: master
   shared_preferences: ^2.0.15
+  carousel_slider: ^4.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -75,6 +76,11 @@ flutter:
     - assets/yolov2_tiny.txt
     - assets/Namur_rules.json
     - assets/Namur_garbages.json
+    - assets/pictures/CRT.png
+    - assets/pictures/OMB.png
+    - assets/pictures/ORG.png
+    - assets/pictures/PMC.png
+    - assets/pictures/BULAVERS.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

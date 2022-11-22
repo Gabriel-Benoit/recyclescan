@@ -1,6 +1,8 @@
 import 'package:recyclescan/garbage.dart';
 import 'package:recyclescan/rule.dart';
 
+import 'utils/pair.dart';
+
 class City {
   final int postalCode;
   final String name;
@@ -11,12 +13,14 @@ class City {
 }
 
 final List<City> cities = [];
-initCities(rules) {
-  cities.add(
-    City(
-      name: "Namur",
-      postalCode: 5000,
-      rules: rules,
-    ),
-  );
+initCities(Map<String, Pair<int, Map<Garbage, Rule>>> rulesMap) {
+  rulesMap.forEach((key, value) {
+    cities.add(
+      City(
+        name: key,
+        postalCode: value.first(),
+        rules: value.second(),
+      ),
+    );
+  });
 }

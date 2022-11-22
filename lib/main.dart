@@ -3,6 +3,7 @@ import 'package:camera/camera.dart';
 import 'package:recyclescan/location/locationpage.dart';
 import 'package:recyclescan/rule.dart';
 import 'package:recyclescan/utils/dynamictext.dart';
+import 'package:recyclescan/utils/pair.dart';
 import 'package:recyclescan/utils/screenorientation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'city.dart';
@@ -10,24 +11,24 @@ import 'detector/home.dart';
 import 'utils/placeholder.dart';
 
 GlobalKey<DynamicTextState> title = GlobalKey();
+SharedPreferences? prefs; //=SharedPreferences.getInstance().w;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initRules();
-  initCities(rules);
+  initCities({"Namur": Pair(5000, rules["Namur"]!)});
+  prefs = await SharedPreferences.getInstance();
   final cameras = await availableCameras();
-  final prefs = await SharedPreferences.getInstance();
   final camera = cameras.first;
   runApp(
-    App(camera: camera, prefs: prefs),
+    App(camera: camera),
   );
 }
 
 class App extends StatelessWidget with PortraitModeMixin {
   final CameraDescription camera;
-  final SharedPreferences prefs;
 
-  const App({super.key, required this.camera, required this.prefs});
+  const App({super.key, required this.camera});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,6 @@ class App extends StatelessWidget with PortraitModeMixin {
       ),
       home: WidgetManager(
         camera: camera,
-        prefs: prefs,
       ),
     );
   }
@@ -48,8 +48,7 @@ class App extends StatelessWidget with PortraitModeMixin {
 
 class WidgetManager extends StatefulWidget {
   final CameraDescription camera;
-  final SharedPreferences prefs;
-  const WidgetManager({super.key, required this.camera, required this.prefs});
+  const WidgetManager({super.key, required this.camera});
 
   @override
   State<StatefulWidget> createState() => _WidgetManagerState();
@@ -57,6 +56,7 @@ class WidgetManager extends StatefulWidget {
 
 class _WidgetManagerState extends State<WidgetManager> {
   Widget _currentWidget = Container();
+  late SharedPreferences _prefs;
   final _tileStyle = ListTileStyle.list;
 
   void _setWidget(Widget w, {bool popCtx = true}) {
@@ -71,11 +71,12 @@ class _WidgetManagerState extends State<WidgetManager> {
   @override
   void initState() {
     super.initState();
-    if (widget.prefs.getString("location") == null) {
+    _prefs = prefs!;
+    if (_prefs.getString("location") == null) {
       _currentWidget = LocationPage(
         okHandler: () =>
             _setWidget(HomePage(camera: widget.camera), popCtx: false),
-        prefs: widget.prefs,
+        prefs: _prefs,
       );
     } else {
       _currentWidget = HomePage(camera: widget.camera);
@@ -122,7 +123,7 @@ class _WidgetManagerState extends State<WidgetManager> {
                       okHandler: () => _setWidget(
                           HomePage(camera: widget.camera),
                           popCtx: false),
-                      prefs: widget.prefs,
+                      prefs: _prefs,
                     ),
                   )),
             )

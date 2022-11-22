@@ -43,14 +43,14 @@ final Map<String, Garbage> garbages = {
 
 final Map<Garbage, Map<String, Garbage>> alternatives = {
   garbages["bottle"]!: {
-    "Cette bouteille est en verre ?": garbages["glassbottle"]!
+    "Cette bouteille est en verre ?": garbages["glassbottle"]!,
   },
   garbages["teabag"]!: {"Ce sachet est en papier ?": garbages["paperteabag"]!}
 };
 final Map<Garbage, List<String>> comments = {
   garbages["toothpaste"]!: ["Le tube doit être vide."],
   garbages["bottle"]!: [
-    "Si la bouteille contient des produits corrosifs et-ou toxiques, elle se trie au recyparc - DSM (déchets spéciaux des ménages)"
+    "Si la bouteille contient des produits corrosifs et-ou toxiques, elle se trie au recyparc - DSM (déchets spéciaux des ménages)."
   ],
   garbages["glassbottle"]!: [
     "Les bouchons de bouteille de vin, de champagne et de cidre se trient au recyparc - bouchons de liège",

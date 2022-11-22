@@ -3,11 +3,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const provinces = <String>[
   "Namur",
-  "Liège",
-  "Hainaut",
-  "Brabant Wallon",
-  "Luxembourg",
-  "Bruxelles"
+  // "Liège",
+  // "Hainaut",
+  // "Brabant Wallon",
+  // "Luxembourg",
+  // "Bruxelles"
 ];
 
 class LocationPage extends StatefulWidget {

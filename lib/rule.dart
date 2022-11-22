@@ -57,7 +57,7 @@ class Rule {
       // Add new rule in the map
       rules[gb] = Rule(
           name: jsonRules[ruleId]["name"],
-          image: NetworkImage(jsonRules[ruleId]["imageUrl"]),
+          image: AssetImage(jsonRules[ruleId]["imageUrl"]),
           color: color);
     }
 
@@ -65,8 +65,10 @@ class Rule {
   }
 }
 
-Map<Garbage, Rule> rules = {};
+Map<String, Map<Garbage, Rule>> rules = {};
 Future<void> initRules() async {
-  rules = await Rule.fromJSON(
-      "assets/Namur_garbages.json", "assets/Namur_rules.json");
+  rules = {
+    "Namur": await Rule.fromJSON(
+        "assets/Namur_garbages.json", "assets/Namur_rules.json")
+  };
 }
