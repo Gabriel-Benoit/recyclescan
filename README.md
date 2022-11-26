@@ -1,16 +1,13 @@
-# recyclescan
+# RecycleScan
 
-A new Flutter project.
+Une application flutter ayant pour but d'aider et de sensibiliser les wallons au tri éco-responsable.
 
-## Getting Started
+## Comment compiler et démarrer l'app
 
-This project is a starting point for a Flutter application.
+Ce projet est écrit à l'iade du framework Flutter
 
-A few resources to get you started if this is your first Flutter project:
+Voici quelques ressources afin de vous aider à démarrer l'application:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+-   [Documentation de flutter](https://docs.flutter.dev/)
+-   [Installation de flutter](https://docs.flutter.dev/get-started/install)
+-   [Android studio](https://developer.android.com/studio)
