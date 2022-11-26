@@ -1,7 +1,7 @@
 import 'package:flutter/painting.dart';
 
-// Classe représentant un déchet (avec un nom et une image)
-// Cette image peut être locale ou en ligne
+/// Classe représentant un déchet (avec un nom et une image)
+/// Cette image peut être locale ou en ligne
 class Garbage {
   final String name;
   final ImageProvider image;
@@ -12,7 +12,7 @@ class Garbage {
   });
 }
 
-// Liste de tous les déchets gérés par l'application
+/// Liste de tous les déchets gérés par l'application
 final Map<String, Garbage> garbages = {
   "can": const Garbage(
       name: "Canette",
@@ -44,8 +44,8 @@ final Map<String, Garbage> garbages = {
           "https://upload.wikimedia.org/wikipedia/commons/e/e1/Tea_bag_777.jpg")),
 };
 
-// Dictionnaire où un déchet est mappé avec toutes ses alternatives
-// Les alternatives sont identifiées par un String qui représente la question posée à l'utilisateur sur l'app
+/// Dictionnaire où un déchet est mappé avec toutes ses alternatives
+/// Les alternatives sont identifiées par un String qui représente la question posée à l'utilisateur sur l'app
 final Map<Garbage, Map<String, Garbage>> alternatives = {
   garbages["bottle"]!: {
     "Cette bouteille est en verre ?": garbages["glassbottle"]!,
@@ -53,7 +53,7 @@ final Map<Garbage, Map<String, Garbage>> alternatives = {
   garbages["teabag"]!: {"Ce sachet est en papier ?": garbages["paperteabag"]!}
 };
 
-// Dictionnaire où un déchet est mappé avec tout ses commentaires
+/// Dictionnaire où un déchet est mappé avec tout ses commentaires
 final Map<Garbage, List<String>> comments = {
   garbages["toothpaste"]!: ["Le tube doit être vide."],
   garbages["bottle"]!: [

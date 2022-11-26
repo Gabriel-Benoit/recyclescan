@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Widget Wrapper représentant une box qui identifie un déchet et
-/// qui permet d'afficher une description qui donne une directive de tri
+/// Widget représentant une box qui identifie un déchet et
+/// qui permet d'afficher une description par le biais d'un callback
 class Box extends StatelessWidget {
   final double height;
   final double width;
@@ -22,15 +22,16 @@ class Box extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-        left: posX,
-        top: posY,
-        width: width,
-        height: height,
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: color, width: 2.0),
-          ),
-          child: GestureDetector(onTap: onPressed),
-        ));
+      left: posX,
+      top: posY,
+      width: width,
+      height: height,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: color, width: 2.0),
+        ),
+        child: GestureDetector(onTap: onPressed),
+      ),
+    );
   }
 }

@@ -6,23 +6,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:recyclescan/garbage.dart';
 
-// Classe représentant une règle de tri avec (venant d'un fichier JSON):
+/// Classe représentant une règle de tri avec (venant d'un fichier JSON):
 class Rule {
-  final String name; // Intitulé de la règle (Type de poubelle pour la collecte, ou dépot à la bulle à verre/recyparc)
+  final String
+      name; // Intitulé de la règle (Type de poubelle pour la collecte, ou dépot à la bulle à verre/recyparc)
   final ImageProvider image; // Image locale ou en ligne
-  final Color color; // Couleur correspondant à la règle (bleu pour les PMC par exemple)
+  final Color
+      color; // Couleur correspondant à la règle (bleu pour les PMC par exemple)
 
   const Rule({required this.name, required this.image, required this.color});
 
-  /* Récupère les règles depuis 2 fichiers json et produit un dictionnaire qui associe une règle à chaque déchet
-
-  :params:
-    - garbagesPath : chemin du fichier json qui associe un id de déchet à un id de règle
-    - rulesPath : chemin du fichier json qui liste toutes les règles
-
-  :return:
-    - rules : objet Future qui contiendra le dictionnaire des règles au final
-  */
+  /// Récupère les règles depuis 2 fichiers json et produit un dictionnaire qui associe une règle à chaque déchet
+  ///
+  ///#  params:
+  ///  - garbagesPath : chemin du fichier json qui associe un id de déchet à un id de règle
+  ///  - rulesPath : chemin du fichier json qui liste toutes les règles
+  ///
+  ///#  return:
+  ///  - rules : objet Future qui contiendra le dictionnaire des règles au final
+  ///
   static Future<Map<Garbage, Rule>> fromJSON(
       String garbagesPath, String rulesPath) async {
     // Load data from json file and wait for result
@@ -74,7 +76,7 @@ class Rule {
   }
 }
 
-// Dictionnaire qui associe à chaque ville, toutes les règles relatives aux déchets gérés par l'app
+/// Dictionnaire qui associe à chaque ville, toutes les règles relatives aux déchets gérés par l'app
 Map<String, Map<Garbage, Rule>> rules = {};
 Future<void> initRules() async {
   rules = {
