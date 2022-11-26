@@ -92,7 +92,7 @@ class WasteDescription extends StatelessWidget {
                   options: CarouselOptions(
                     height: 200.0,
                     autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 3),
+                    autoPlayInterval: Duration(seconds: 5),
                     autoPlayAnimationDuration: Duration(milliseconds: 800),
                     autoPlayCurve: Curves.fastOutSlowIn,
                   ),
