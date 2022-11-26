@@ -10,8 +10,11 @@ import 'city.dart';
 import 'detector/home.dart';
 import 'utils/placeholder.dart';
 
+/// Clé globale permettant de mettre à jour dynamiquement le titre de l'application
 GlobalKey<DynamicTextState> title = GlobalKey();
-SharedPreferences? prefs; //=SharedPreferences.getInstance().w;
+
+/// Instance des préférences stockées de manière permanente sur le téléphone
+SharedPreferences? prefs;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +28,7 @@ Future<void> main() async {
   );
 }
 
+/// Point d'entrée de l'application --
 class App extends StatelessWidget with PortraitModeMixin {
   final CameraDescription camera;
 
@@ -46,6 +50,9 @@ class App extends StatelessWidget with PortraitModeMixin {
   }
 }
 
+/// Manager permettant de mettre à jour le widget à afficher en fonction du contexte.
+/// Ce dernier change lorsque l'on appuie sur un lien dans la liste déroulante en haut à
+/// gauche de l'app (menu "burgers").
 class WidgetManager extends StatefulWidget {
   final CameraDescription camera;
   const WidgetManager({super.key, required this.camera});
@@ -59,6 +66,12 @@ class _WidgetManagerState extends State<WidgetManager> {
   late SharedPreferences _prefs;
   final _tileStyle = ListTileStyle.list;
 
+  /// Change le widget courant et gère ou non le contexte en fonction du paramètre ```popCtx```
+  ///
+  /// Params:
+  /// -------
+  /// - w: le nouveau widget
+  /// - popCtx (default = true): doit retirer ou non le contexte courant
   void _setWidget(Widget w, {bool popCtx = true}) {
     setState(() {
       _currentWidget = w;
@@ -101,18 +114,6 @@ class _WidgetManagerState extends State<WidgetManager> {
               style: _tileStyle,
               textColor: Colors.lightGreen,
               onTap: (() => _setWidget(HomePage(camera: widget.camera))),
-            ),
-            ListTile(
-              title: const Text("Signaler un déchet mal identifié"),
-              style: _tileStyle,
-              textColor: Colors.lightGreen,
-              onTap: (() => _setWidget(const PlaceHolder())),
-            ),
-            ListTile(
-              title: const Text("A propos de nous"),
-              style: _tileStyle,
-              textColor: Colors.lightGreen,
-              onTap: (() => _setWidget(const PlaceHolder())),
             ),
             ListTile(
               title: const Text("Changer ma province"),

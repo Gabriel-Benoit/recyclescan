@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
+/// Bouton de fermeture avec un style personnalisé
 class CustomCloseButton extends StatelessWidget {
   final void Function() closeCallBack;
   const CustomCloseButton({super.key, required this.closeCallBack});

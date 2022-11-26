@@ -18,11 +18,13 @@ class Rule {
 
   /// Récupère les règles depuis 2 fichiers json et produit un dictionnaire qui associe une règle à chaque déchet
   ///
-  ///#  params:
+  /// Params:
+  /// -------
   ///  - garbagesPath : chemin du fichier json qui associe un id de déchet à un id de règle
   ///  - rulesPath : chemin du fichier json qui liste toutes les règles
   ///
-  ///#  return:
+  /// Return:
+  /// -------
   ///  - rules : objet Future qui contiendra le dictionnaire des règles au final
   ///
   static Future<Map<Garbage, Rule>> fromJSON(

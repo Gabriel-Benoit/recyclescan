@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Liste des provinces étant disponible pour l'application des règles de tri
 const provinces = <String>[
   "Namur",
-  // "Liège",
-  // "Hainaut",
-  // "Brabant Wallon",
-  // "Luxembourg",
-  // "Bruxelles"
 ];
 
+/// Widget ayant pour vocation de permettre à l'utilisateur de sauvegarder de
+/// manière persistente (sur le téléphone) la province wallone sur laquelle
+/// l'appli doit se baser pour afficher les règles de tri.
 class LocationPage extends StatefulWidget {
   final SharedPreferences prefs;
   final void Function() okHandler;
@@ -23,8 +22,8 @@ class LocationPage extends StatefulWidget {
 class _LocationPageState extends State<LocationPage> {
   late String province;
 
-  _saveLocation() {
-    widget.prefs.setString("location", province);
+  Future<void> _saveLocation() async {
+    await widget.prefs.setString("location", province);
   }
 
   @override
@@ -67,8 +66,8 @@ class _LocationPageState extends State<LocationPage> {
                   },
                 ),
                 TextButton(
-                  onPressed: () {
-                    _saveLocation();
+                  onPressed: () async {
+                    await _saveLocation();
                     widget.okHandler();
                   },
                   style: const ButtonStyle(

@@ -5,6 +5,11 @@ import 'package:recyclescan/utils/customclosebutton.dart';
 import '../garbage.dart';
 import '../rule.dart';
 
+/// Widget qui affiche le déchet identifié ainsi que la
+/// manière de trier celui-ci mais également des conseils
+/// concerant le tri et des redirections si nécessaire
+/// (matériaux ambigu comme l'indentification d'une bouteille
+/// en plastique ou en verre par exemple).
 class WasteDescription extends StatelessWidget {
   final Garbage garbage;
 
@@ -27,16 +32,16 @@ class WasteDescription extends StatelessWidget {
     var alternatives_ = alternatives[garbage] ?? {};
     var comments_ = comments[garbage] ?? [];
 
-    // Adding questions with redirections
+    // Ajout des question avec redirections
     List<Widget> questions = alternatives_.entries.map((entry) {
-      return genCarouselElem(entry.key, () {
+      return _genCarouselElem(entry.key, () {
         changeGarbageCallBack(entry.value);
       }, TextDecoration.underline);
     }).toList();
 
-    // Adding comments
+    // Ajout des commentaires
     List<Widget> coms = comments_.map((com) {
-      return genCarouselElem(com, null, TextDecoration.none);
+      return _genCarouselElem(com, null, TextDecoration.none);
     }).toList();
 
     return Container(
@@ -101,6 +106,8 @@ class WasteDescription extends StatelessWidget {
   }
 }
 
+/// Widget helper pour afficher correctement une image dans le
+/// contexte d'utilisation dans le widget ```WasteDescription```
 class WrappedImage extends StatelessWidget {
   final ImageProvider provider;
   final String semanticLabel;
@@ -134,7 +141,18 @@ class WrappedImage extends StatelessWidget {
   }
 }
 
-Widget genCarouselElem(
+/// Focntion utilitaire pour générer un élément du carousel dans le
+/// widget ```WasteDescription```
+///
+/// Params:
+/// -------
+/// - text: le texte à afficher
+/// - onTap: le callback à passer si on veut faire une redirection
+///
+/// Return:
+/// -------
+/// - un widget correctement formatté en fonction des paramètres
+Widget _genCarouselElem(
     String text, void Function()? onTap, TextDecoration textDecoration) {
   return Builder(builder: (ctx) {
     return Container(

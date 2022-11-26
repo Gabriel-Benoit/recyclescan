@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// blocks rotation; sets orientation to: portrait
+///  Empêche l'application de passer en mode paysage
 void _portraitModeOnly() {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

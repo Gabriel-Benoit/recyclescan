@@ -4,6 +4,7 @@ import 'package:tflite/tflite.dart';
 
 import 'detector.dart';
 
+/// Widget contenant la prévisualisation de la caméra
 class HomePage extends StatefulWidget {
   final CameraDescription camera;
 
@@ -17,11 +18,13 @@ class _HomePageState extends State<HomePage> {
   late final CameraController _controller;
   late final Future<void> _initialized;
   late final bool busy = false;
+
   @override
   void initState() {
     super.initState();
     _controller = CameraController(widget.camera, ResolutionPreset.low,
         enableAudio: false);
+    // On charge le modèle de ML
     Future<String?> model = Tflite.loadModel(
         model: "assets/yolov2_tiny.tflite",
         labels: "assets/yolov2_tiny.txt",
@@ -37,7 +40,6 @@ class _HomePageState extends State<HomePage> {
     await Future.wait([Tflite.close()]);
   }
 
-// Ajouter une var de state qui est la vue à afficher
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<void>(

@@ -2,15 +2,21 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:recyclescan/detector/wastedescription.dart';
 import 'package:recyclescan/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tflite/tflite.dart';
 
 import '../garbage.dart';
 import '../rule.dart';
 import 'box.dart';
 
+/// Clé globale permettant de briser la hiérarchie dans l'abre.
+/// Cette clé est utilisée pour obtenir la taille effective de
+/// la caméra après le rendu
 GlobalKey _camPreviewSize = GlobalKey(debugLabel: "cam_size");
 
+/// Permet de récuperer les dimensions de la caméra en
+/// utilisant la clé globale ```_camPreviewSize```. Si
+/// le rendu de la caméra n'est pas encore fait alors null
+/// est retourné
 Size? _getCamSize() {
   final RenderObject? renderBox =
       _camPreviewSize.currentContext?.findRenderObject();
@@ -20,6 +26,7 @@ Size? _getCamSize() {
   return (renderBox as RenderBox).size;
 }
 
+/// Classe intéragissant avec le modèle de reconnaissance d'objets en temps réel
 class ObjectDetector extends StatefulWidget {
   final CameraController controller;
   late Map<Garbage, Rule> currentRules;
@@ -63,6 +70,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
     await widget.controller.dispose();
   }
 
+  /// Démarre la reconnaissance d'objets en temps réel
   Future<void> _beginDetection() async {
     if (isDetectionStarted) return;
     isDetectionStarted = true;
@@ -70,6 +78,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
     await widget.controller.startImageStream((image) async {
       if (busy) return;
       busy = true;
+      // On récupère les objets identifiés
       List<dynamic>? recognitions = await Tflite.detectObjectOnFrame(
           bytesList: image.planes.map((plane) => plane.bytes).toList(),
           model: "YOLO",
@@ -92,6 +101,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
     });
   }
 
+  /// Met en pause la reconnaissance d'objets en temps réel
   Future<void> _pauseDetection() async {
     if (!isDetectionStarted) return;
     isDetectionStarted = false;
@@ -99,6 +109,10 @@ class _ObjectDetectorState extends State<ObjectDetector> {
     await widget.controller.stopImageStream();
   }
 
+  /// Permet de d'assigner un déchet selectionné.
+  /// On peut distinguer 2 cas:
+  /// - si ```garbage == null``` alors on relancera la détection
+  /// - sinon on affiche la description du déchet passé
   void _setGarbage(Garbage? garbage) {
     if (garbage == null) {
       title.currentState!.defaultText();
@@ -113,6 +127,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
 
   @override
   Widget build(BuildContext context) {
+    // Si on a sélectionné un déchet, on affiche la description de celui-ci
     if (garbage != null) {
       return Stack(
         children: [
@@ -137,8 +152,10 @@ class _ObjectDetectorState extends State<ObjectDetector> {
     size ??= const Size(0.0, 0.0);
     List<Widget> widgets = [];
 
+    // Ajout de la prévisualisation de la caméra
     widgets.add(preview);
 
+    // Ajout des détections
     widgets.addAll(
       recognitions.map(
         (result) => Box(
