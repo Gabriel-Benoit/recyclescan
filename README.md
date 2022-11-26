@@ -11,3 +11,5 @@ Voici quelques ressources afin de vous aider à démarrer l'application:
 -   [Documentation de flutter](https://docs.flutter.dev/)
 -   [Installation de flutter](https://docs.flutter.dev/get-started/install)
 -   [Android studio](https://developer.android.com/studio)
+
+Une fois que votre environnement est prêt il suffit d'effectuer la commande `flutter run`.
