@@ -38,6 +38,7 @@ class App extends StatelessWidget with PortraitModeMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'RecycleScan',
       theme: ThemeData(
         primarySwatch: Colors.green,
