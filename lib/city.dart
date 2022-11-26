@@ -3,6 +3,7 @@ import 'package:recyclescan/rule.dart';
 
 import 'utils/pair.dart';
 
+/// Classe représentant une ville avec les règles de tri qui lui sont propres
 class City {
   final int postalCode;
   final String name;
