@@ -77,7 +77,7 @@ class _ObjectDetectorState extends State<ObjectDetector> {
           imageWidth: image.width,
           imageMean: 0,
           imageStd: 255.0,
-          threshold: 0.5,
+          threshold: 0.4,
           numResultsPerClass: 2,
           anchors: Tflite.anchors,
           blockSize: 32,

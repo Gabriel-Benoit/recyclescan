@@ -1,5 +1,5 @@
-teabag
 pizzabox
-can
 bottle
+teabag
+can
 toothpaste
